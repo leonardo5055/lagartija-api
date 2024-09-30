@@ -1,6 +1,7 @@
 // index.js
 const express = require('express');
 require('dotenv').config();
+const cors = require('cors');
 const app = express();
 const port = process.env.DB_PORT || 3000;
 const productosRoutes = require('./routes/productos');
@@ -9,6 +10,7 @@ const db = require('./config/db'); // Asegúrate de que la conexión a la DB est
 
 // Middleware para leer datos JSON
 app.use(express.json());
+app.use(cors());
 
 // Verificar la conexión a la base de datos antes de iniciar
 db.connect((err) => {

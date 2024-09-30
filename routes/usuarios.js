@@ -18,9 +18,15 @@ router.get('/', (req, res) => {
 // Agregar un nuevo usuario
 router.post('/', (req, res) => {
     console.log("POST /api/usuarios llamado"); // Log para confirmar la llamada
-    const { Nombres, Apellidos, correo, contraseña, telefono, dni } = req.body;
-    const query = 'INSERT INTO Usuarios (Nombres, Apellidos, correo, contraseña, telefono, dni) VALUES (?, ?, ?, ?, ?, ?)';
-    db.query(query, [Nombres, Apellidos, correo, contraseña, telefono, dni], (err, results) => {
+    const { correo, contraseña } = req.body; // Solo obtenemos correo y contraseña
+
+    // Validar que se reciban los datos requeridos
+    if (!correo || !contraseña) {
+        return res.status(400).json({ error: 'Faltan datos requeridos: correo y contraseña son obligatorios.' });
+    }
+
+    const query = 'INSERT INTO Usuarios (correo, contraseña) VALUES (?, ?)';
+    db.query(query, [correo, contraseña], (err, results) => {
         if (err) {
             console.error('Error en la base de datos:', err.message); // Log de error más detallado
             return res.status(500).json({ error: 'Error en la base de datos', detalles: err.message });
@@ -28,5 +34,6 @@ router.post('/', (req, res) => {
         res.json({ message: 'Usuario agregado con éxito', id: results.insertId });
     });
 });
+
 
 module.exports = router;
