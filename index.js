@@ -1,7 +1,7 @@
 // index.js
 const express = require('express');
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.BD_PORT || 3000;
 const productosRoutes = require('./routes/productos');
 const usuariosRoutes = require('./routes/usuarios');
 const db = require('./config/db'); // Asegúrate de que la conexión a la DB esté aquí
