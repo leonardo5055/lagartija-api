@@ -4,12 +4,22 @@ const db = require('../config/db');
 
 // Obtener todos los productos con sus imágenes
 router.get('/', (req, res) => {
-    const query = `
+    const { search } = req.query; // Obtener el término de búsqueda de la consulta
+    let query = `
         SELECT p.*, i.imagen_url 
         FROM Productos p
-        LEFT JOIN ImagenesProducto i ON p.id_producto = i.producto_id;
+        LEFT JOIN ImagenesProducto i ON p.id_producto = i.producto_id
     `;
-    db.query(query, (err, results) => {
+
+    const queryParams = [];
+
+    // Si existe un término de búsqueda, agregar el filtro con LIKE
+    if (search) {
+        query += ` WHERE p.nombre LIKE ?`;
+        queryParams.push(`%${search}%`);
+    }
+
+    db.query(query, queryParams, (err, results) => {
         if (err) {
             return res.status(500).json({ error: err });
         }
